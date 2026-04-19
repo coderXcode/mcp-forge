@@ -100,7 +100,7 @@ MCP Forge is a self-hosted AI agent that analyzes your existing app (via OpenAPI
 ### 1 — Get the code
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
+git clone https://github.com/coderXcode/mcp-forge.git
 cd YOUR_REPO
 ```
 
@@ -220,17 +220,33 @@ Connect MCP Forge to Claude Desktop so Claude can drive the entire workflow.
 
 ### One-command install
 
-**Windows (PowerShell):**
+**🪟 Windows (PowerShell):**
 ```powershell
 .\scripts\install_claude_plugin.ps1
 ```
 
-**macOS / Linux:**
+**🍎 macOS / 🐧 Linux (Terminal):**
 ```bash
 bash scripts/install_claude_plugin.sh
 ```
 
-The script checks Docker is running, pulls the token automatically, and writes the config file in the right place. Then **fully quit and reopen Claude Desktop** (system tray → Quit).
+Both scripts:
+- Check Docker + `mcp_forge_app` is running
+- Pull `MCP_AUTH_TOKEN` automatically from the container
+- Create the `Claude` config folder if it doesn't exist
+- Write `claude_desktop_config.json` with the correct token and SSE URL
+
+Config file locations written by the script:
+
+| OS | Path |
+|---|---|
+| Windows | `%APPDATA%\Claude\claude_desktop_config.json` |
+| macOS | `~/Library/Application Support/Claude/claude_desktop_config.json` |
+| Linux | `~/.config/Claude/claude_desktop_config.json` |
+
+> **Mac:** Claude Desktop must be installed first — download from [claude.ai/download](https://claude.ai/download). The script will warn you if it's not found.
+
+Then **fully quit and reopen Claude Desktop** (system tray / menu bar → Quit).
 
 ### Verify
 

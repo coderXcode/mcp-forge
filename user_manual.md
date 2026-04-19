@@ -20,7 +20,7 @@ No Python installation required unless you want the `forge` CLI.
 ### Step 1 — Get the code
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
+git clone https://github.com/coderXcode/mcp-forge.git
 cd YOUR_REPO
 ```
 
@@ -97,7 +97,14 @@ Open **Terminal** in the project folder and run:
 bash scripts/install_claude_plugin.sh
 ```
 
-Same steps — checks Docker, pulls token, writes config to `~/Library/Application Support/Claude/claude_desktop_config.json`.
+The script will:
+1. ✅ Check Docker is running
+2. ✅ Check `mcp_forge_app` container is up
+3. ✅ Pull `MCP_AUTH_TOKEN` directly from the container
+4. ✅ Write config to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `~/.config/Claude/` (Linux)
+5. ✅ Warn you if Claude Desktop isn't installed yet
+
+> **Mac:** Claude Desktop must be installed first. Download it from **[claude.ai/download](https://claude.ai/download)**. Install it like any other `.dmg` app, then run the script.
 
 ---
 
