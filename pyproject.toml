@@ -42,8 +42,8 @@ server = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/your-org/mcp-forge"
-Documentation = "https://github.com/your-org/mcp-forge/blob/main/CLAUDE_DESKTOP_PLUGIN.md"
+Homepage = "https://github.com/coderXcode/mcp-forge"
+Documentation = "https://github.com/coderXcode/mcp-forge/blob/main/user_manual.md"
 
 [tool.hatch.build.targets.wheel]
 packages = ["forge_cli"]

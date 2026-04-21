@@ -251,10 +251,15 @@ export FORGE_TOKEN=your-token-here
 
 ## 4. Connect to Codex
 
+> **Note:** `mcp-forge` is not yet published to PyPI. Until then, install directly from GitHub:
+
 ```bash
-# Install the forge CLI
-pip install mcp-forge
-# or: pipx install mcp-forge
+# Install the forge CLI from GitHub
+pip install git+https://github.com/coderXcode/mcp-forge.git
+# or: pipx install git+https://github.com/coderXcode/mcp-forge.git
+
+# Once published to PyPI (coming soon):
+# pip install mcp-forge
 
 # Add the plugin to Codex
 codex marketplace add mcp-forge/mcp-forge
@@ -278,14 +283,15 @@ A `forge` command-line tool is included for terminal-based workflows.
 ### Install
 
 ```bash
-# From this repo (works immediately — no PyPI needed)
+# From this repo (works immediately — no PyPI or GitHub needed)
 pip install -e .
 
-# From GitHub
+# From GitHub (works now)
 pip install git+https://github.com/coderXcode/mcp-forge.git
+pipx install git+https://github.com/coderXcode/mcp-forge.git
 
-# From PyPI
-pip install mcp-forge
+# From PyPI (coming soon — not yet published)
+# pip install mcp-forge
 ```
 
 ### Commands
