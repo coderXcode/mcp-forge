@@ -2,6 +2,10 @@
 
 > Complete guide to running MCP Forge and integrating it with Claude Desktop, Claude Code, Codex, and the `forge` CLI.
 
+```bash
+pip install mcp-forger   # install the forge CLI
+```
+
 ---
 
 ## Table of Contents
@@ -251,15 +255,11 @@ export FORGE_TOKEN=your-token-here
 
 ## 4. Connect to Codex
 
-> **Note:** `mcp-forge` is not yet published to PyPI. Until then, install directly from GitHub:
-
 ```bash
-# Install the forge CLI from GitHub
-pip install git+https://github.com/coderXcode/mcp-forge.git
-# or: pipx install git+https://github.com/coderXcode/mcp-forge.git
-
-# Once published to PyPI (coming soon):
-# pip install mcp-forge
+# Install the forge CLI — pick one:
+pip install mcp-forger                                                            # from PyPI (recommended)
+pipx install mcp-forger                                                           # isolated install
+pip install git+https://github.com/coderXcode/mcp-forge.git     # directly from GitHub
 
 # Add the plugin to Codex
 codex marketplace add mcp-forge/mcp-forge
@@ -283,15 +283,16 @@ A `forge` command-line tool is included for terminal-based workflows.
 ### Install
 
 ```bash
-# From this repo (works immediately — no PyPI or GitHub needed)
-pip install -e .
+# From PyPI (recommended)
+pip install mcp-forger
+pipx install mcp-forger
 
-# From GitHub (works now)
+# From GitHub
 pip install git+https://github.com/coderXcode/mcp-forge.git
 pipx install git+https://github.com/coderXcode/mcp-forge.git
 
-# From PyPI (coming soon — not yet published)
-# pip install mcp-forge
+# From this repo (local dev)
+pip install -e .
 ```
 
 ### Commands

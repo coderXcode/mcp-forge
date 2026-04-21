@@ -13,7 +13,12 @@
   <img src="https://img.shields.io/badge/claude-plugin-blueviolet?logo=anthropic" />
   <img src="https://img.shields.io/badge/python-3.12+-green?logo=python" />
   <img src="https://img.shields.io/badge/license-MIT-lightgrey" />
+  <img src="https://img.shields.io/pypi/v/mcp-forger?label=pypi%20install" />
 </p>
+
+```bash
+pip install mcp-forger   # CLI + Claude Desktop plugin installer
+```
 
 ---
 
@@ -88,6 +93,11 @@ bash scripts/install_claude_plugin.sh
 **Claude Code (one-liner):**
 ```
 /plugin marketplace add coderXcode/mcp-forge
+```
+
+**forge CLI:**
+```bash
+pip install mcpforge
 ```
 
 ---
