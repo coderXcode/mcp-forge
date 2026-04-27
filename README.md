@@ -5,7 +5,6 @@
 <h1 align="center">🔨 MCP Forger</h1>
 
 <p align="center">
-  # MCP Forge
 
   ## Your software becomes an AI coworker.
 
