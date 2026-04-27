@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/coderXcode/mcp-forge/main/images/mcp_forge.jpg" alt="MCP Forge" width="200" />
+  <img src="https://raw.githubusercontent.com/coderXcode/mcp-forge/main/images/mcp_forge.jpg" alt="MCP Forger" width="200" />
 </p>
 
-<h1 align="center">🔨 MCP Forge</h1>
+<h1 align="center">🔨 MCP Forger</h1>
 
 <p align="center">
   Convert <strong>any application</strong> into an MCP (Model Context Protocol) server — with AI assistance.
@@ -18,7 +18,7 @@
 
 ---
 
-MCP Forge is a self-hosted AI agent that analyzes your existing app (via OpenAPI spec, GitHub repo, live URL, or local code) and generates a production-ready MCP server that **Claude Desktop, Claude Code**, or any MCP client can use directly.
+MCP Forger is a self-hosted AI agent that analyzes your existing app (via OpenAPI spec, GitHub repo, live URL, or local code) and generates a production-ready MCP server that **Claude Desktop, Claude Code**, or any MCP client can use directly.
 
 ---
 
@@ -36,18 +36,18 @@ MCP Forge is a self-hosted AI agent that analyzes your existing app (via OpenAPI
 
 ---
 
-## 🗺️ Two Ways to Use MCP Forge
+## 🗺️ Two Ways to Use MCP Forger
 
 | Method | Best for |
 |---|---|
 | **Web Dashboard** | Visual workflow — point & click, no code |
 | **`forge` CLI + Claude Desktop** | AI-driven workflow from your terminal or Claude chat |
 
-Both require MCP Forge running in Docker first — see [Step 1](#step-1--run-mcp-forge-docker) below.
+Both require MCP Forger running in Docker first — see [Step 1](#step-1--run-mcp-forge-docker) below.
 
 ---
 
-## Step 1 — Run MCP Forge (Docker)
+## Step 1 — Run MCP Forger (Docker)
 
 > **Required for everything** — the dashboard, CLI, and Claude Desktop all connect to this Docker instance.
 
@@ -93,7 +93,7 @@ docker compose up -d
 curl http://localhost:8000/api/projects/
 ```
 
-✅ MCP Forge is now online. Keep Docker running whenever you use the CLI or Claude Desktop.
+✅ MCP Forger is now online. Keep Docker running whenever you use the CLI or Claude Desktop.
 
 ---
 
@@ -114,7 +114,7 @@ pip install mcp-forger
 # or: pipx install mcp-forger  (isolated, recommended)
 ```
 
-### Connect the CLI to your running MCP Forge instance
+### Connect the CLI to your running MCP Forger instance
 
 > Do this once — it saves your connection details locally.
 
@@ -180,7 +180,7 @@ forge plugin    status                          # verify Claude Desktop config
 
 ## Step 2C — Use Claude Desktop
 
-Claude Desktop lets you control MCP Forge entirely through natural language.
+Claude Desktop lets you control MCP Forger entirely through natural language.
 
 ### Install the plugin
 
@@ -206,7 +206,7 @@ Go to **Settings → Developer** — you should see **mcp-forge** with a 🟢 gr
 ### Example prompts
 
 ```
-Create a new MCP Forge project called "petstore" from
+Create a new MCP Forger project called "petstore" from
 https://petstore3.swagger.io/api/v3/openapi.json
 ```
 ```
