@@ -8,7 +8,7 @@
 
   ## Your software becomes an AI coworker.
 
-  MCP Forge turns any app, API, repo, or codebase into an AI coworker that Claude, Codex, and other MCP clients can use directly. 
+  MCP Forger turns any app, API, repo, or codebase into an AI coworker that Claude, Codex, and other MCP clients can use directly. 
   Give it your backend. It analyzes it, generates an MCP server, tests it, and lets Claude operate your software through natural language.
   Convert <strong>any application</strong> into an MCP (Model Context Protocol) server — with AI assistance.
 </p>
