@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "mcp-forger"
-version = "1.0.2"
+version = "1.0.3"
 description = "Convert any application into an MCP server — with AI assistance. CLI + Claude Desktop plugin."
 readme = "README.md"
 license = { text = "MIT" }
@@ -47,3 +47,14 @@ Documentation = "https://github.com/coderXcode/mcp-forge/blob/main/user_manual.m
 
 [tool.hatch.build.targets.wheel]
 packages = ["forge_cli"]
+
+[tool.hatch.build.targets.sdist]
+exclude = [
+    "venv-model-server/",
+    "cache/",
+    "generated/",
+    "mnt/",
+    "data/",
+    "logs/",
+    ".env",
+]
