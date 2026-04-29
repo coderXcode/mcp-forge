@@ -66,6 +66,19 @@ async def update_config(payload: EnvUpdate):
     return {"ok": True, "updated": [v.key for v in payload.vars]}
 
 
+@router.put("/raw")
+async def update_raw_config(payload: dict):
+    """Overwrite .env with raw text content from the editor."""
+    content = payload.get("content", "")
+    if not isinstance(content, str):
+        raise HTTPException(400, "content must be a string")
+    ENV_FILE.write_text(content)
+    # Reload settings so changes take effect immediately
+    from config import get_settings
+    get_settings.cache_clear()
+    return {"ok": True}
+
+
 @router.post("/reset")
 async def reset_from_example():
     """Copy .env.example → .env (useful for first-time setup)."""
@@ -87,19 +100,61 @@ async def local_model_status():
 async def local_model_load():
     """
     Trigger eager loading of the local model in the background.
+    - Proxy mode (LOCAL_MODEL_HOST set): tests the connection to the external server.
+    - Normal mode: fires off background loading inside Docker.
     Returns immediately; poll /local-model/status to watch progress.
     """
-    from config import settings
-    if settings.llm_provider != "local":
-        raise HTTPException(400, "LLM_PROVIDER is not 'local'. Change it first and save.")
+    from config import get_settings
+
+    settings = get_settings()
+
+    # ── Proxy mode: test connection to the external model server ─────────────
+    if settings.local_model_host:
+        from core.llm.local_provider import get_status
+        status = get_status()
+        if status.get("state") == "loaded":
+            return {"ok": True, "message": "Connected to local model server.", "proxy": True}
+        raise HTTPException(
+            503,
+            detail=(
+                f"Cannot reach local model server at {settings.local_model_host}. "
+                "Run 'python scripts/run_model_local.py' on your machine first."
+            ),
+        )
+
+    # ── Normal (in-process Docker) mode ──────────────────────────────────────
+    env_vars = _read_env_file()
+    changed = False
+    if env_vars.get("LLM_PROVIDER", "").lower() != "local":
+        env_vars["LLM_PROVIDER"] = "local"
+        changed = True
+
+    # On Apple Silicon / no CUDA: switch device to mps and disable 4-bit
+    import platform
+    is_mac = platform.system() == "Darwin"
+    if is_mac:
+        try:
+            import torch
+            has_cuda = torch.cuda.is_available()
+        except Exception:
+            has_cuda = False
+        if not has_cuda:
+            if env_vars.get("LOCAL_MODEL_DEVICE", "auto") not in ("mps", "cpu"):
+                env_vars["LOCAL_MODEL_DEVICE"] = "mps"
+                changed = True
+            if env_vars.get("LOCAL_MODEL_LOAD_IN_4BIT", "true").lower() == "true":
+                env_vars["LOCAL_MODEL_LOAD_IN_4BIT"] = "false"
+                changed = True
+
+    if changed:
+        _write_env_file(env_vars)
+        get_settings.cache_clear()
+
+    settings = get_settings()
     import asyncio
-    from core.llm.local_provider import _ensure_loaded, get_status
-    # Fire-and-forget background load
+    from core.llm.local_provider import _ensure_loaded
     asyncio.create_task(_ensure_loaded())
     return {"ok": True, "message": f"Loading {settings.local_model} in background…"}
-
-
-# ── Helpers ───────────────────────────────────────────────────────────────────
 
 def _read_env_file() -> dict[str, str]:
     if not ENV_FILE.exists():
@@ -150,11 +205,14 @@ def _write_env_file(vars: dict[str, str]) -> None:
     ENV_FILE.write_text("\n".join(lines) + "\n")
 
 
-SENSITIVE_KEYS = {"key", "secret", "token", "password", "api_key", "private"}
+# Exact key names that should be masked in the UI (not substrings)
+SENSITIVE_KEYS = {
+    "GEMINI_API_KEY", "ANTHROPIC_API_KEY", "OPENAI_API_KEY",
+    "GITHUB_TOKEN", "ENCRYPTION_KEY", "MCP_AUTH_TOKEN",
+}
 
 
 def _mask_value(key: str, value: str) -> str:
-    key_lower = key.lower()
-    if any(s in key_lower for s in SENSITIVE_KEYS) and len(value) > 4:
+    if key.upper() in SENSITIVE_KEYS and len(value) > 4:
         return value[:4] + "****"
     return value

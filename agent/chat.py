@@ -13,7 +13,7 @@ from typing import Any, Callable
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import select
 
-from config import settings
+from config import get_settings
 from db.models import (
     ChatMessage, Clarification, MessageRole, Notification,
     NotificationType, Project
@@ -111,6 +111,7 @@ class ForgeAgent:
     async def _call_llm(
         self, history: list[dict], context: str
     ) -> tuple[str, list[dict]]:
+        settings = get_settings()
         provider = settings.llm_provider
 
         system = SYSTEM_PROMPT
@@ -127,6 +128,7 @@ class ForgeAgent:
             return await self._call_openai(history, system)
 
     async def _call_gemini(self, history: list[dict], system: str) -> tuple[str, list]:
+        settings = get_settings()
         import asyncio
         from google import genai
         client = genai.Client(api_key=settings.gemini_api_key)
@@ -152,6 +154,7 @@ class ForgeAgent:
         return text, []
 
     async def _call_anthropic(self, history: list[dict], system: str) -> tuple[str, list]:
+        settings = get_settings()
         import anthropic
         client = anthropic.AsyncAnthropic(api_key=settings.anthropic_api_key)
 
@@ -170,6 +173,7 @@ class ForgeAgent:
         return resp.content[0].text, []
 
     async def _call_openai(self, history: list[dict], system: str) -> tuple[str, list]:
+        settings = get_settings()
         from openai import AsyncOpenAI
         client = AsyncOpenAI(api_key=settings.openai_api_key)
 

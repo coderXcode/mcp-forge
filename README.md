@@ -76,6 +76,8 @@ MCP_AUTH_TOKEN=change-me-to-something-secret
 
 > **Free option:** Gemini has a free tier at [aistudio.google.com](https://aistudio.google.com) — no credit card needed.
 
+> **No API key? Run locally instead:** Set `LLM_PROVIDER=local` and leave the API key fields empty. On **macOS** run `bash scripts/start_model_server.sh` after Docker starts. On **Linux with NVIDIA GPU** the model loads inside Docker automatically. See [Local Model](#️-local-model-no-api-key) for details.
+
 ### 1.2 — macOS / Linux — disable the NVIDIA GPU block first
 
 > **Skip this if you are on Windows with an NVIDIA GPU.**
@@ -109,7 +111,7 @@ docker compose up -d
 | Service | URL | Purpose |
 |---|---|---|
 | 🌐 Dashboard | http://localhost:8000 | Web UI — full visual workflow |
-| 🔌 MCP endpoint | http://localhost:8001/sse | Used by Claude Desktop / Claude Code (default port) |
+| 🔌 MCP endpoint | http://localhost:8002/sse | Used by Claude Desktop / Claude Code (default port) |
 
 ### 1.4 — Verify it's running
 
@@ -149,7 +151,10 @@ forge connect --url http://localhost:8000 --token YOUR_MCP_AUTH_TOKEN
 
 Get your token with:
 ```bash
-docker exec mcp_forge_app printenv MCP_AUTH_TOKEN
+# macOS / Linux
+grep -m1 '^MCP_AUTH_TOKEN=' .env | cut -d= -f2
+# Windows (PowerShell)
+(Get-Content .env | Where-Object { $_ -match '^MCP_AUTH_TOKEN=' }) -replace '^MCP_AUTH_TOKEN=',''
 ```
 
 ### Verify
@@ -268,34 +273,49 @@ Skills available:
 
 ## 🖥️ Local Model (No API Key)
 
-Run entirely offline with any HuggingFace model — no API key needed. Requires NVIDIA GPU.
+Run entirely offline with any HuggingFace model — no API key needed.
+
+### Linux with NVIDIA GPU
+
+Set in `.env` (or via the dashboard **Config** page → select **Local**):
 
 ```env
 LLM_PROVIDER=local
-LOCAL_MODEL=Qwen/Qwen2.5-Coder-14B-Instruct   # swap for any HuggingFace model
+LOCAL_MODEL=Qwen/Qwen2.5-Coder-14B-Instruct
 LOCAL_MODEL_DEVICE=auto
 LOCAL_MODEL_LOAD_IN_4BIT=true
 ```
 
 ```bash
-docker compose down && docker compose build && docker compose up -d
+docker compose up -d
 ```
 
-| Model | VRAM (4-bit) | Notes |
-|---|---|---|
-| `Qwen/Qwen2.5-Coder-7B-Instruct` | ~4 GB | Lightest |
-| `Qwen/Qwen2.5-Coder-14B-Instruct` | ~8 GB | **Recommended** |
-| `deepseek-ai/deepseek-coder-v2-lite-instruct` | ~8 GB | Strong alternative |
-| `Qwen/Qwen2.5-Coder-32B-Instruct` | ~18 GB | Best quality |
-| `mistralai/Mistral-7B-Instruct-v0.3` | ~4 GB | General purpose |
+### macOS (Apple Silicon or Intel)
 
-> CPU-only (no GPU): set `LOCAL_MODEL_LOAD_IN_4BIT=false` and `LOCAL_MODEL_DEVICE=cpu` — much slower but works.
+Docker cannot access the Mac GPU, so the model runs natively on the host instead. One command does everything (installs deps, creates a venv, starts the server):
+
+```bash
+bash scripts/start_model_server.sh
+```
+
+Wait until the terminal shows `Listening on 0.0.0.0:8005`, then go to the dashboard **Config** page and select **Local** — the app will proxy inference requests to the native server automatically. Model weights download once to `./cache/huggingface/` and are reused on every subsequent start.
+
+> The script auto-selects the best model for your RAM (7B for 16–32 GB, 14B for 36 GB+).
+
+| Model | RAM (unified) | Notes |
+|---|---|---|
+| `Qwen/Qwen2.5-Coder-7B-Instruct` | ~16 GB | Recommended for most Macs |
+| `Qwen/Qwen2.5-Coder-14B-Instruct` | ~36 GB | Better quality, needs more RAM |
+| `Qwen/Qwen2.5-Coder-32B-Instruct` | ~64 GB | Best quality |
+
+> **Linux / NVIDIA — CPU-only fallback:** set `LOCAL_MODEL_LOAD_IN_4BIT=false` and `LOCAL_MODEL_DEVICE=cpu` — slower but works.
 
 ---
 
 ## ⚙️ Key Configuration
 
-All settings live in `.env` — also editable live from the dashboard **Config** page.
+All settings live in `.env` — also editable live from the dashboard **Config** page without restarting Docker.
+Switch LLM providers anytime: open **Config**, click **Gemini / Anthropic / OpenAI / Local**, enter your key, and click **Save Changes**.
 
 | Variable | Default | Description |
 |---|---|---|
@@ -340,7 +360,12 @@ docker logs mcp_forge_app --tail 30
 
 **Wrong / expired auth token**
 ```bash
-docker exec mcp_forge_app printenv MCP_AUTH_TOKEN
+# macOS / Linux
+grep -m1 '^MCP_AUTH_TOKEN=' .env | cut -d= -f2
+# Windows (PowerShell)
+(Get-Content .env | Where-Object { $_ -match '^MCP_AUTH_TOKEN=' }) -replace '^MCP_AUTH_TOKEN=',''
+```
+```bash
 forge connect --url http://localhost:8000 --token <new-token>
 forge plugin install   # updates claude_desktop_config.json too
 ```

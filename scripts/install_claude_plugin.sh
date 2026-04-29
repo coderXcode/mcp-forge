@@ -33,9 +33,9 @@ echo -e "${GREEN}  Docker OK -- mcp_forge_app is running.${NC}"
 
 # --- Step 2: Get auth token ---
 echo -e "${YELLOW}[2/5] Fetching auth token from container...${NC}"
-TOKEN=$(docker exec mcp_forge_app printenv MCP_AUTH_TOKEN)
+TOKEN=$(grep -m1 '^MCP_AUTH_TOKEN=' .env | cut -d= -f2)
 if [ -z "$TOKEN" ]; then
-    echo -e "${RED}  ERROR: Could not read MCP_AUTH_TOKEN from container.${NC}"
+    echo -e "${RED}  ERROR: Could not read MCP_AUTH_TOKEN from .env${NC}"
     exit 1
 fi
 echo -e "${GREEN}  Token fetched OK.${NC}"

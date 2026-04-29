@@ -70,29 +70,31 @@ def _client() -> httpx.Client:
 
 
 def _get_mcp_port() -> int:
-    """Resolve MCP_SERVER_PORT: .env file → live API → default 8001."""
+    """Resolve MCP_SERVER_PORT: .env file → live API → default 8002."""
     # 1. Read from .env in the saved project_dir (or cwd as fallback)
     cfg = _load_config()
     project_dir = cfg.get("project_dir") or str(Path.cwd())
-    env_file = Path(project_dir) / ".env"
-    if env_file.exists():
-        for line in env_file.read_text().splitlines():
-            line = line.strip()
-            if line.startswith("MCP_SERVER_PORT") and "=" in line:
-                try:
-                    return int(line.split("=", 1)[1].strip().split()[0])
-                except (ValueError, IndexError):
-                    pass
+    for candidate in [Path(project_dir) / ".env", Path.cwd() / ".env"]:
+        if candidate.exists():
+            for line in candidate.read_text().splitlines():
+                line = line.strip()
+                if line.startswith("MCP_SERVER_PORT") and "=" in line:
+                    try:
+                        return int(line.split("=", 1)[1].strip().split()[0])
+                    except (ValueError, IndexError):
+                        pass
     # 2. Query the live API
     try:
         with _client() as c:
             resp = c.get("/api/config/")
             if resp.status_code == 200:
-                return int(resp.json().get("vars", {}).get("MCP_SERVER_PORT", 8001))
+                val = resp.json().get("vars", {}).get("MCP_SERVER_PORT", "")
+                if val and str(val).isdigit():
+                    return int(val)
     except Exception:
         pass
     # 3. Hardcoded default
-    return 8001
+    return 8002
 
 
 # ── Commands ───────────────────────────────────────────────────────────────────
@@ -245,16 +247,18 @@ def plugin(
 ):
     """Install or remove the Claude Desktop plugin config."""
     import platform
-    is_windows = platform.system() == "Windows"
-    if is_windows:
+    _sys = platform.system()
+    if _sys == "Windows":
         claude_dir = Path(os.environ["APPDATA"]) / "Claude"
-    else:
+    elif _sys == "Darwin":
         claude_dir = Path.home() / "Library" / "Application Support" / "Claude"
+    else:  # Linux
+        claude_dir = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config")) / "Claude"
 
-    # Default: docker on macOS/Linux (SSE url format not supported there),
-    #          sse on Windows where it works fine
+    # docker exec stdio works reliably on macOS, Linux, and Windows.
+    # The SSE url format is not supported by recent Claude Desktop builds.
     if mode is None:
-        mode = "sse" if is_windows else "docker"
+        mode = "docker"
 
     config_path = claude_dir / "claude_desktop_config.json"
 
@@ -273,7 +277,7 @@ def plugin(
     if action == "install":
         token = _get_token()
         if not token:
-            token = typer.prompt("MCP Auth Token (from docker exec mcp_forge_app printenv MCP_AUTH_TOKEN)")
+            token = typer.prompt("MCP Auth Token (find it with: grep -m1 '^MCP_AUTH_TOKEN=' .env | cut -d= -f2)")
 
         from urllib.parse import urlparse
         mcp_port = _get_mcp_port()

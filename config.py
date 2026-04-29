@@ -50,6 +50,10 @@ class Settings(BaseSettings):
     local_model: str = "Qwen/Qwen2.5-Coder-14B-Instruct"
     local_model_device: str = "auto"
     local_model_load_in_4bit: bool = True
+    # Proxy to an external model server (set when running inside Docker on macOS).
+    # e.g. http://host.docker.internal:8005  (run scripts/run_model_local.py on the host)
+    local_model_host: str = ""       # empty = load model in-process
+    local_model_port: int = 8005     # port for scripts/run_model_local.py
 
     # ── GitHub ────────────────────────────────────────────────────────────────
     github_token: str = ""

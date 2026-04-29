@@ -30,7 +30,10 @@ The install scripts (`install_claude_plugin.ps1` / `.sh`) handle this automatica
 ### Get your auth token
 
 ```bash
-docker exec mcp_forge_app printenv MCP_AUTH_TOKEN
+# macOS / Linux
+grep -m1 '^MCP_AUTH_TOKEN=' .env | cut -d= -f2
+# Windows (PowerShell)
+(Get-Content .env | Where-Object { $_ -match '^MCP_AUTH_TOKEN=' }) -replace '^MCP_AUTH_TOKEN=',''
 ```
 
 ### Config file location

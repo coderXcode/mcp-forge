@@ -47,14 +47,43 @@
             </button>
           </template>
         </div>
-        <input-row key="GEMINI_API_KEY" label="Gemini API Key" type="password" :vars="vars" @change="onInput"></input-row>
         <div class="grid grid-cols-2 gap-4">
-          <config-field label="Gemini API Key" key="GEMINI_API_KEY" :vars="vars" @update="setVar"></config-field>
-          <config-field label="Gemini Model" key="GEMINI_MODEL" :vars="vars" @update="setVar"></config-field>
-          <config-field label="Anthropic API Key" key="ANTHROPIC_API_KEY" secret :vars="vars" @update="setVar"></config-field>
-          <config-field label="Anthropic Model" key="ANTHROPIC_MODEL" :vars="vars" @update="setVar"></config-field>
-          <config-field label="OpenAI API Key" key="OPENAI_API_KEY" secret :vars="vars" @update="setVar"></config-field>
-          <config-field label="OpenAI Model" key="OPENAI_MODEL" :vars="vars" @update="setVar"></config-field>
+          <div>
+            <label class="block text-xs text-gray-400 mb-1.5">Gemini API Key</label>
+            <input type="password"
+                   :placeholder="getVar('GEMINI_API_KEY') ? '●●●● saved — enter new value to update' : 'Enter Gemini API key'"
+                   @input="setVar('GEMINI_API_KEY', $event.target.value)"
+                   class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-forge-500 transition-colors">
+          </div>
+          <div>
+            <label class="block text-xs text-gray-400 mb-1.5">Gemini Model</label>
+            <input type="text" :value="getVar('GEMINI_MODEL')" @input="setVar('GEMINI_MODEL', $event.target.value)"
+                   class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-forge-500 transition-colors">
+          </div>
+          <div>
+            <label class="block text-xs text-gray-400 mb-1.5">Anthropic API Key</label>
+            <input type="password"
+                   :placeholder="getVar('ANTHROPIC_API_KEY') ? '●●●● saved — enter new value to update' : 'Enter Anthropic API key'"
+                   @input="setVar('ANTHROPIC_API_KEY', $event.target.value)"
+                   class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-forge-500 transition-colors">
+          </div>
+          <div>
+            <label class="block text-xs text-gray-400 mb-1.5">Anthropic Model</label>
+            <input type="text" :value="getVar('ANTHROPIC_MODEL')" @input="setVar('ANTHROPIC_MODEL', $event.target.value)"
+                   class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-forge-500 transition-colors">
+          </div>
+          <div>
+            <label class="block text-xs text-gray-400 mb-1.5">OpenAI API Key</label>
+            <input type="password"
+                   :placeholder="getVar('OPENAI_API_KEY') ? '●●●● saved — enter new value to update' : 'Enter OpenAI API key'"
+                   @input="setVar('OPENAI_API_KEY', $event.target.value)"
+                   class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-forge-500 transition-colors">
+          </div>
+          <div>
+            <label class="block text-xs text-gray-400 mb-1.5">OpenAI Model</label>
+            <input type="text" :value="getVar('OPENAI_MODEL')" @input="setVar('OPENAI_MODEL', $event.target.value)"
+                   class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-forge-500 transition-colors">
+          </div>
         </div>
         <!-- Local model settings — shown only when local is selected -->
         <div x-show="getVar('LLM_PROVIDER') === 'local'" class="border border-yellow-700/50 bg-yellow-900/10 rounded-lg p-4 space-y-4">
@@ -65,16 +94,64 @@
 
           <!-- Model fields -->
           <div class="grid grid-cols-2 gap-4">
-            <config-field label="HuggingFace Model ID" key="LOCAL_MODEL" :vars="vars" @update="setVar" class="col-span-2"
-              placeholder="Qwen/Qwen2.5-Coder-14B-Instruct"></config-field>
-            <config-field label="Device" key="LOCAL_MODEL_DEVICE" :vars="vars" @update="setVar"
-              placeholder="auto"></config-field>
-            <config-field label="Load in 4-bit (saves VRAM)" key="LOCAL_MODEL_LOAD_IN_4BIT" :vars="vars" @update="setVar"
-              placeholder="true"></config-field>
+            <div class="col-span-2">
+              <label class="block text-xs text-gray-400 mb-1.5">HuggingFace Model ID</label>
+              <input type="text" :value="getVar('LOCAL_MODEL')" @input="setVar('LOCAL_MODEL', $event.target.value)"
+                     placeholder="Qwen/Qwen2.5-Coder-14B-Instruct"
+                     class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-forge-500 transition-colors">
+            </div>
+            <div>
+              <label class="block text-xs text-gray-400 mb-1.5">Device</label>
+              <input type="text" :value="getVar('LOCAL_MODEL_DEVICE')" @input="setVar('LOCAL_MODEL_DEVICE', $event.target.value)"
+                     placeholder="auto"
+                     class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-forge-500 transition-colors">
+            </div>
+            <div>
+              <label class="block text-xs text-gray-400 mb-1.5">Load in 4-bit (saves VRAM)</label>
+              <input type="text" :value="getVar('LOCAL_MODEL_LOAD_IN_4BIT')" @input="setVar('LOCAL_MODEL_LOAD_IN_4BIT', $event.target.value)"
+                     placeholder="true"
+                     class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-forge-500 transition-colors">
+            </div>
+          </div>
+
+          <!-- macOS Docker GPU warning -->
+          <div x-data="localModelStatus()" x-init="init()">
+
+          <!-- Setup guide: shown when no proxy set AND no GPU (macOS Docker) -->
+          <div x-show="warning && !proxy" x-cloak
+               class="mb-3 rounded-lg border border-amber-700/40 bg-amber-950/30 p-3 space-y-2 text-xs">
+            <p class="font-semibold text-amber-300 flex items-center gap-1.5">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+              Docker cannot access the Mac GPU — run the model natively in one command
+            </p>
+            <ol class="text-gray-300 space-y-3 list-decimal list-inside leading-relaxed">
+              <li>
+                Open a <strong>new terminal</strong> in the project folder and run:
+                <code class="block mt-1 ml-4 bg-gray-900 text-green-300 rounded px-2 py-1 font-mono text-[11px] select-all">bash scripts/start_model_server.sh</code>
+                <span class="text-gray-500 ml-4 block text-[11px] mt-0.5 leading-relaxed">
+                  The script auto-installs Python if needed, creates a venv, installs torch + transformers, then starts the server.<br>
+                  Model weights download once to <code>./cache/huggingface/</code> (shared with Docker — no re-download ever).
+                </span>
+              </li>
+              <li>
+                <span class="text-gray-300">Wait until the terminal shows <code class="text-green-400">Listening on 0.0.0.0:8005</code>, then:</span>
+                <button @click="applyProxyHost()"
+                        class="ml-2 inline-flex items-center gap-1 px-2 py-0.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-[11px] font-medium transition-colors">
+                  <i class="fa-solid fa-bolt text-[10px]"></i> Set LOCAL_MODEL_HOST &amp; save
+                </button>
+              </li>
+            </ol>
+          </div>
+
+          <!-- Proxy warning: shown when proxy is set but server unreachable -->
+          <div x-show="proxy && status === 'proxy_disconnected'" x-cloak
+               class="mb-3 flex items-start gap-2 rounded-lg border border-orange-700/60 bg-orange-900/20 px-3 py-2 text-xs text-orange-300">
+            <i class="fa-solid fa-triangle-exclamation mt-0.5 shrink-0 text-orange-400"></i>
+            <span x-text="warning || 'Local model server not reachable.'"></span>
           </div>
 
           <!-- Status bar -->
-          <div x-data="localModelStatus()" x-init="init()" class="rounded-lg border border-gray-700 bg-gray-900/60 px-4 py-3 flex items-center justify-between gap-4">
+          <div class="rounded-lg border border-gray-700 bg-gray-900/60 px-4 py-3 flex items-center justify-between gap-4">
             <div class="flex items-center gap-3">
               <!-- state icon -->
               <template x-if="status === 'loaded'">
@@ -83,6 +160,9 @@
               <template x-if="status === 'loading'">
                 <i class="fa-solid fa-spinner fa-spin text-yellow-400 text-sm shrink-0"></i>
               </template>
+              <template x-if="status === 'proxy_disconnected'">
+                <span class="w-2.5 h-2.5 rounded-full bg-orange-400 shrink-0"></span>
+              </template>
               <template x-if="status === 'not_loaded' || status === 'error'">
                 <span class="w-2.5 h-2.5 rounded-full bg-gray-500 shrink-0"></span>
               </template>
@@ -90,14 +170,15 @@
               <div>
                 <p class="text-xs text-white font-medium" x-text="statusLabel"></p>
                 <p x-show="vram" class="text-xs text-gray-400 font-mono" x-text="vram"></p>
+                <p x-show="proxy && status !== 'proxy_disconnected'" class="text-[10px] text-gray-500">via LOCAL_MODEL_HOST</p>
               </div>
             </div>
             <button @click="loadModel()"
                     :disabled="loading || status === 'loaded'"
                     :class="status === 'loaded' ? 'bg-green-900 text-green-400 cursor-default' : 'bg-yellow-700 hover:bg-yellow-600 text-white'"
                     class="text-xs font-medium px-3 py-1.5 rounded-lg transition-colors disabled:opacity-60">
-              <i class="fa-solid mr-1" :class="loading ? 'fa-spinner fa-spin' : status === 'loaded' ? 'fa-check' : 'fa-bolt'"></i>
-              <span x-text="status === 'loaded' ? 'Model Ready' : loading ? 'Loading…' : 'Load Model Now'"></span>
+              <i class="fa-solid mr-1" :class="loading ? 'fa-spinner fa-spin' : status === 'loaded' ? 'fa-check' : (proxy ? 'fa-link' : 'fa-bolt')"></i>
+              <span x-text="status === 'loaded' ? (proxy ? 'Server Connected' : 'Model Ready') : loading ? 'Connecting…' : (proxy ? 'Test Connection' : 'Load Model Now')"></span>
             </button>
           </div>
 
@@ -108,6 +189,7 @@
             First run downloads the model from HuggingFace (~8 GB for 14B 4-bit). Subsequent starts reuse the cache.
             Recommended for 15 GB VRAM: <code class="text-yellow-300">Qwen/Qwen2.5-Coder-14B-Instruct</code>.
           </p>
+          </div><!-- end x-data localModelStatus -->
         </div>
       </div>
     </div>
@@ -124,7 +206,13 @@
         </div>
       </div>
       <div class="p-5 grid grid-cols-2 gap-4">
-        <config-field label="GitHub Token" key="GITHUB_TOKEN" secret :vars="vars" @update="setVar" class="col-span-2"></config-field>
+        <div class="col-span-2">
+          <label class="block text-xs text-gray-400 mb-1.5">GitHub Token</label>
+          <input type="password"
+                 :placeholder="getVar('GITHUB_TOKEN') ? '●●●● saved — enter new value to update' : 'Enter GitHub personal access token'"
+                 @input="setVar('GITHUB_TOKEN', $event.target.value)"
+                 class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-forge-500 transition-colors">
+        </div>
       </div>
     </div>
 
@@ -139,11 +227,31 @@
         </div>
       </div>
       <div class="p-5 grid grid-cols-2 gap-4">
-        <config-field label="App Environment" key="APP_ENV" :vars="vars" @update="setVar"></config-field>
-        <config-field label="Port" key="PORT" :vars="vars" @update="setVar"></config-field>
-        <config-field label="Log Level" key="LOG_LEVEL" :vars="vars" @update="setVar"></config-field>
-        <config-field label="Output Directory" key="OUTPUT_DIR" :vars="vars" @update="setVar"></config-field>
-        <config-field label="Database URL" key="DB_URL" :vars="vars" @update="setVar" class="col-span-2"></config-field>
+        <div>
+          <label class="block text-xs text-gray-400 mb-1.5">App Environment</label>
+          <input type="text" :value="getVar('APP_ENV')" @input="setVar('APP_ENV', $event.target.value)"
+                 class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-forge-500 transition-colors">
+        </div>
+        <div>
+          <label class="block text-xs text-gray-400 mb-1.5">Port</label>
+          <input type="text" :value="getVar('PORT')" @input="setVar('PORT', $event.target.value)"
+                 class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-forge-500 transition-colors">
+        </div>
+        <div>
+          <label class="block text-xs text-gray-400 mb-1.5">Log Level</label>
+          <input type="text" :value="getVar('LOG_LEVEL')" @input="setVar('LOG_LEVEL', $event.target.value)"
+                 class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-forge-500 transition-colors">
+        </div>
+        <div>
+          <label class="block text-xs text-gray-400 mb-1.5">Output Directory</label>
+          <input type="text" :value="getVar('OUTPUT_DIR')" @input="setVar('OUTPUT_DIR', $event.target.value)"
+                 class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-forge-500 transition-colors">
+        </div>
+        <div class="col-span-2">
+          <label class="block text-xs text-gray-400 mb-1.5">Database URL</label>
+          <input type="text" :value="getVar('DB_URL')" @input="setVar('DB_URL', $event.target.value)"
+                 class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white font-mono focus:outline-none focus:border-forge-500 transition-colors">
+        </div>
       </div>
     </div>
 
@@ -159,9 +267,23 @@
         </div>
       </div>
       <div class="p-5 grid grid-cols-2 gap-4">
-        <config-field label="MCP Host" key="MCP_SERVER_HOST" :vars="vars" @update="setVar"></config-field>
-        <config-field label="MCP Port" key="MCP_SERVER_PORT" :vars="vars" @update="setVar"></config-field>
-        <config-field label="MCP Auth Token" key="MCP_AUTH_TOKEN" secret :vars="vars" @update="setVar" class="col-span-2"></config-field>
+        <div>
+          <label class="block text-xs text-gray-400 mb-1.5">MCP Host</label>
+          <input type="text" :value="getVar('MCP_SERVER_HOST')" @input="setVar('MCP_SERVER_HOST', $event.target.value)"
+                 class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-forge-500 transition-colors">
+        </div>
+        <div>
+          <label class="block text-xs text-gray-400 mb-1.5">MCP Port</label>
+          <input type="text" :value="getVar('MCP_SERVER_PORT')" @input="setVar('MCP_SERVER_PORT', $event.target.value)"
+                 class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-forge-500 transition-colors">
+        </div>
+        <div class="col-span-2">
+          <label class="block text-xs text-gray-400 mb-1.5">MCP Auth Token</label>
+          <input type="password"
+                 :placeholder="getVar('MCP_AUTH_TOKEN') ? '●●●● saved — enter new value to update' : 'Enter MCP auth token'"
+                 @input="setVar('MCP_AUTH_TOKEN', $event.target.value)"
+                 class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-forge-500 transition-colors">
+        </div>
       </div>
     </div>
 
@@ -252,9 +374,13 @@ function configPage() {
     },
 
     async saveAll() {
+      if (this.dirty.length === 0) {
+        showToast({ type: 'info', message: 'No changes to save yet' });
+        return;
+      }
       this.saving = true;
       try {
-        const payload = Object.entries(this.vars).map(([key, value]) => ({ key, value }));
+        const payload = this.dirty.map(key => ({ key, value: this.vars[key] }));
         const resp = await fetch('/api/config/', {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
@@ -272,7 +398,23 @@ function configPage() {
     },
 
     async saveRaw() {
-      showToast({ type: 'warning', message: 'Raw save coming soon — use Save Changes instead' });
+      try {
+        const resp = await fetch('/api/config/raw', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ content: this.rawContent }),
+        });
+        if (resp.ok) {
+          showToast({ type: 'success', message: '.env saved — changes take effect immediately' });
+          // Re-sync the structured vars from the new .env content
+          await this.init();
+        } else {
+          const e = await resp.json().catch(() => ({}));
+          showToast({ type: 'error', message: e.detail || 'Failed to save raw .env' });
+        }
+      } catch {
+        showToast({ type: 'error', message: 'Network error — could not save' });
+      }
     },
 
     async resetFromExample() {
@@ -286,54 +428,89 @@ function configPage() {
 
 function localModelStatus() {
   return {
-    status: 'not_loaded',   // not_loaded | loading | loaded | error
+    status: 'not_loaded',   // not_loaded | loading | loaded | error | proxy_disconnected
     vram: '',
+    warning: '',
+    proxy: false,           // true when LOCAL_MODEL_HOST is configured
     loading: false,
     _poll: null,
 
     get statusLabel() {
-      if (this.status === 'loaded')     return 'Model loaded in memory';
-      if (this.status === 'loading')    return 'Loading model… (check docker logs for progress)';
-      if (this.status === 'error')      return 'Load failed — check docker logs';
+      if (this.proxy) {
+        if (this.status === 'loaded')              return 'Connected to local model server';
+        if (this.status === 'proxy_disconnected') return 'Local server unreachable — script not running?';
+        return 'Checking local server…';
+      }
+      if (this.status === 'loaded')   return 'Model loaded in memory';
+      if (this.status === 'loading')  return 'Loading model… (check docker logs for progress)';
+      if (this.status === 'error')    return 'Load failed — check docker logs';
       return 'Model not loaded (will load on first use)';
     },
 
     async init() {
       await this.refresh();
+      if (this.status === 'loading') this._startPolling();
     },
 
     async refresh() {
       try {
         const r = await fetch('/api/config/local-model/status');
         const d = await r.json();
-        this.status   = d.state;
-        this.vram     = d.vram_gb || '';
-      } catch { this.status = 'error'; }
+        this.status  = d.state;
+        this.vram    = d.vram_gb || '';
+        this.warning = d.warning || '';
+        this.proxy   = d.proxy   || false;
+        this.loading = (d.state === 'loading');
+      } catch { this.status = 'error'; this.loading = false; }
+    },
+
+    _startPolling() {
+      if (this._poll) return;
+      this._poll = setInterval(async () => {
+        await this.refresh();
+        if (this.status === 'loaded' || this.status === 'error' || this.status === 'proxy_disconnected') {
+          clearInterval(this._poll);
+          this._poll = null;
+          this.loading = false;
+          if (this.status === 'loaded')
+            showToast({ type: 'success', message: this.proxy ? 'Connected to local model server!' : 'Local model loaded and ready!' });
+          else if (this.status !== 'proxy_disconnected')
+            showToast({ type: 'error', message: 'Model load failed — see docker logs.' });
+        }
+      }, 4000);
+    },
+
+    async applyProxyHost() {
+      await fetch('/api/config/', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ vars: [{ key: 'LOCAL_MODEL_HOST', value: 'http://host.docker.internal:8005' }] }),
+      });
+      showToast({ type: 'success', message: 'LOCAL_MODEL_HOST saved — reloading page…' });
+      setTimeout(() => location.reload(), 1800);
     },
 
     async loadModel() {
       this.loading = true;
-      this.status  = 'loading';
+      if (!this.proxy) this.status = 'loading';
       try {
         const r = await fetch('/api/config/local-model/load', { method: 'POST' });
         if (!r.ok) {
           const e = await r.json();
           showToast({ type: 'error', message: e.detail || 'Load failed' });
-          this.status  = 'error';
+          this.status  = this.proxy ? 'proxy_disconnected' : 'error';
           this.loading = false;
           return;
         }
-        showToast({ type: 'info', message: 'Model loading in background — this may take a while on first run…' });
-        // Poll every 5 s until loaded
-        this._poll = setInterval(async () => {
+        const d = await r.json();
+        if (d.proxy) {
           await this.refresh();
-          if (this.status === 'loaded' || this.status === 'error') {
-            clearInterval(this._poll);
-            this.loading = false;
-            if (this.status === 'loaded')
-              showToast({ type: 'success', message: 'Local model loaded and ready!' });
-          }
-        }, 5000);
+          showToast({ type: 'success', message: 'Connected to local model server!' });
+          this.loading = false;
+        } else {
+          showToast({ type: 'info', message: 'Model loading in background — this may take a while on first run…' });
+          this._startPolling();
+        }
       } catch {
         this.status  = 'error';
         this.loading = false;

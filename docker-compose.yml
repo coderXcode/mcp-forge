@@ -14,8 +14,6 @@ services:
       - ./generated:/app/generated     # bind-mount so files appear on host
       - ./mnt:/mnt:ro                   # drop project folders into mnt/ to use them
       - ./cache/huggingface:/root/.cache/huggingface  # persist model downloads (visible in File Explorer)
-    env_file:
-      - .env
     environment:
       - DB_URL=sqlite+aiosqlite:///./data/mcp_forge.db
     command: >
@@ -25,6 +23,10 @@ services:
       --reload
     depends_on:
       - redis
+    # Allows containers to reach the Docker host (needed for LOCAL_MODEL_HOST proxy on Linux).
+    # On macOS / Windows Docker Desktop this is automatic; on Linux it requires host-gateway.
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     # ── GPU (NVIDIA) — uncomment if on Linux with NVIDIA GPU ────────────────
     # deploy:
     #   resources:
@@ -50,8 +52,6 @@ services:
     volumes:
       - .:/app
       - mcp_forge_data:/app/data
-    env_file:
-      - .env
     environment:
       - APP_URL=http://app:8000
       - MCP_TRANSPORT=sse

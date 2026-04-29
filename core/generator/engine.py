@@ -13,7 +13,7 @@ from typing import Any
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from config import settings
+from config import get_settings
 from db.models import AnalysisResult, TargetLanguage
 
 TEMPLATES_DIR = Path(__file__).parent / "templates"
@@ -187,6 +187,7 @@ CODE:
         return files
 
     async def _call_llm(self, prompt: str) -> str:
+        settings = get_settings()
         provider = settings.llm_provider
         if provider == "gemini":
             import asyncio

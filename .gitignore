@@ -2,6 +2,9 @@
 .env
 *.env.local
 
+# PyPI credentials — never commit
+.pypirc
+
 # Author-only docs — not for public distribution
 author_manual.md
 TESTING.md

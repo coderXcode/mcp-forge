@@ -19,9 +19,9 @@ Write-Host "  Docker OK -- mcp_forge_app is running." -ForegroundColor Green
 
 # Step 2: Get token
 Write-Host "[2/5] Fetching auth token from container..." -ForegroundColor Yellow
-$token = docker exec mcp_forge_app printenv MCP_AUTH_TOKEN
+$token = (Get-Content .env | Where-Object { $_ -match '^MCP_AUTH_TOKEN=' } | Select-Object -First 1) -replace '^MCP_AUTH_TOKEN=',''
 if (-not $token) {
-    Write-Host "  ERROR: Could not read MCP_AUTH_TOKEN from container." -ForegroundColor Red
+    Write-Host "  ERROR: Could not read MCP_AUTH_TOKEN from .env" -ForegroundColor Red
     exit 1
 }
 Write-Host "  Token fetched OK." -ForegroundColor Green

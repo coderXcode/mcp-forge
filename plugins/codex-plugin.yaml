@@ -29,7 +29,7 @@ setup:
 # ── Environment ───────────────────────────────────────────────────────────────
 env:
   FORGE_TOKEN:
-    description: "MCP Forge auth token — run: docker exec mcp_forge_app printenv MCP_AUTH_TOKEN"
+    description: "MCP Forge auth token — run: grep -m1 '^MCP_AUTH_TOKEN=' .env | cut -d= -f2"
     required: true
   FORGE_URL:
     description: "MCP Forge base URL"

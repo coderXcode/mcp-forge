@@ -14,7 +14,7 @@ import re
 from pathlib import Path
 from typing import Any
 
-from config import settings
+from config import get_settings
 
 
 ANALYZE_PROMPT = """You are an expert API analyzer for MCP (Model Context Protocol) conversion.
@@ -87,6 +87,7 @@ class ASTAnalyzer:
         # Use % substitution to avoid KeyError from { } in the prompt template
         prompt = ANALYZE_PROMPT.replace("{code}", code[:60_000])
 
+        settings = get_settings()
         provider = settings.llm_provider
         if provider == "gemini":
             if not settings.gemini_api_key:
@@ -104,6 +105,7 @@ class ASTAnalyzer:
             return await self._call_openai(prompt)
 
     async def _call_gemini(self, prompt: str) -> str:
+        settings = get_settings()
         import asyncio
         from google import genai
         client = genai.Client(api_key=settings.gemini_api_key)
@@ -115,6 +117,7 @@ class ASTAnalyzer:
         return response.text
 
     async def _call_anthropic(self, prompt: str) -> str:
+        settings = get_settings()
         import anthropic
         client = anthropic.AsyncAnthropic(api_key=settings.anthropic_api_key)
         message = await client.messages.create(
@@ -125,6 +128,7 @@ class ASTAnalyzer:
         return message.content[0].text
 
     async def _call_openai(self, prompt: str) -> str:
+        settings = get_settings()
         from openai import AsyncOpenAI
         client = AsyncOpenAI(api_key=settings.openai_api_key)
         resp = await client.chat.completions.create(

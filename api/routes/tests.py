@@ -189,7 +189,8 @@ async def _execute_tests(
                         test_code = prev_run.test_code
                         await project_log(project_id, "Reusing previous test code", source="tests")
                 if not test_code:
-                    from config import settings as _s
+                    from config import get_settings as _gs
+                    _s = _gs()
                     _model_label = f"{_s.llm_provider.upper()} / {_s.active_llm_model}" if _s.llm_provider != 'local' else f"local / {_s.local_model}"
                     await project_log(project_id, f"Generating test code with LLM: {_model_label}", source="tests")
                     server_code = next((v for k, v in files.items() if "server" in k), "")

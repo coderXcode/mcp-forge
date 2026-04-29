@@ -130,7 +130,8 @@ async def _run_generation(
             if not project:
                 return
 
-            from config import settings as _s
+            from config import get_settings as _gs
+            _s = _gs()
             _model_label = f"{_s.llm_provider.upper()} / {_s.active_llm_model}" if _s.llm_provider != 'local' else f"local / {_s.local_model}"
             await project_log(project_id, f"Generation started — target: {target_language.value}", source="generator")
             await project_log(project_id, f"LLM: {_model_label}", source="generator")

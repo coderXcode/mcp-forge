@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import json
 import re
-from config import settings
+from config import get_settings
 
 TEST_PROMPT = """You are an expert software tester writing HTTP integration tests against a REST API backend.
 
@@ -166,6 +166,7 @@ DOCUMENTATION:
         return await self._call_llm(prompt)
 
     async def _call_llm(self, prompt: str) -> str:
+        settings = get_settings()
         provider = settings.llm_provider
 
         try:
